@@ -40,7 +40,7 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
-logger = logging.getLogger('UnixNodesBot')
+logger = logging.getLogger('Nxh-i7Bot')
 
 # Load environment variables
 load_dotenv()
@@ -50,13 +50,13 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 ADMIN_IDS = {int(id_) for id_ in os.getenv('ADMIN_IDS', '1210291131301101618').split(',') if id_.strip()}
 ADMIN_ROLE_ID = int(os.getenv('ADMIN_ROLE_ID', '1376177459870961694'))
 WATERMARK = "UnixNodes VPS Service"
-WELCOME_MESSAGE = "Welcome To UnixNodes! Get Started With Us!"
+WELCOME_MESSAGE = "Welcome To NxH-i7! Get Started With Us!"
 MAX_VPS_PER_USER = int(os.getenv('MAX_VPS_PER_USER', '3'))
 DEFAULT_OS_IMAGE = os.getenv('DEFAULT_OS_IMAGE', 'ubuntu:22.04')
 DOCKER_NETWORK = os.getenv('DOCKER_NETWORK', 'bridge')
 MAX_CONTAINERS = int(os.getenv('MAX_CONTAINERS', '100'))
-DB_FILE = 'unixnodes.db'
-BACKUP_FILE = 'unixnodes_backup.pkl'
+DB_FILE = 'nxh.db'
+BACKUP_FILE = 'nxh_backup.pkl'
 
 # Known miner process names/patterns
 MINER_PATTERNS = [
@@ -1257,7 +1257,7 @@ async def delete_vps(ctx, vps_id: str):
         
         bot.db.remove_vps(token)
         
-        await ctx.send(f"✅ UnixNodes VPS {vps_id} has been deleted successfully!")
+        await ctx.send(f"✅ NxH-i7 VPS {vps_id} has been deleted successfully!")
     except Exception as e:
         logger.error(f"Error in delete_vps: {e}")
         await ctx.send(f"❌ Error deleting VPS: {str(e)}")
@@ -1673,7 +1673,7 @@ async def global_stats(ctx):
         total_disk = sum(vps['disk'] for vps in all_vps.values())
         total_restarts = sum(vps.get('restart_count', 0) for vps in all_vps.values())
         
-        embed = discord.Emembed(title="UnixNodes Global Usage Statistics", color=discord.Color.blue())
+        embed = discord.Emembed(title="NxH-i7 Global Usage Statistics", color=discord.Color.blue())
         embed.add_field(name="Total VPS Created", value=bot.db.get_stat('total_vps_created'), inline=True)
         embed.add_field(name="Total Restarts", value=bot.db.get_stat('total_restarts'), inline=True)
         embed.add_field(name="Current VPS Instances", value=len(all_vps), inline=True)
@@ -2653,4 +2653,5 @@ if __name__ == "__main__":
         bot.run(TOKEN)
     except Exception as e:
         logger.error(f"Bot crashed: {e}")
+
         traceback.print_exc()
