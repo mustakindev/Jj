@@ -47,7 +47,7 @@ load_dotenv()
 
 # Bot configuration
 TOKEN = os.getenv('DISCORD_TOKEN')
-ADMIN_IDS = {int(id_) for id_ in os.getenv('ADMIN_IDS', '1210291131301101618').split(',') if id_.strip()}
+ADMIN_IDS = {int(id_) for id_ in os.getenv('ADMIN_IDS', '1094638459626459177').split(',') if id_.strip()}
 ADMIN_ROLE_ID = int(os.getenv('ADMIN_ROLE_ID', '1376177459870961694'))
 WATERMARK = "NxH-i7 VPS Service"
 WELCOME_MESSAGE = "Welcome To NxH-i7! Get Started With Us!"
@@ -2655,5 +2655,6 @@ if __name__ == "__main__":
         logger.error(f"Bot crashed: {e}")
 
         traceback.print_exc()
+
 
 
