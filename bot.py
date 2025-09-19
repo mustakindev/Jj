@@ -96,11 +96,11 @@ RUN mkdir /var/run/sshd && \\
 RUN systemctl enable ssh && \\
     systemctl enable docker
 
-# UnixNodes customization
+# NxH-i7 customization
 RUN echo '{welcome_message}' > /etc/motd && \\
     echo 'echo "{welcome_message}"' >> /home/{username}/.bashrc && \\
     echo '{watermark}' > /etc/machine-info && \\
-    echo 'unixnodes-{vps_id}' > /etc/hostname
+    echo 'nxh-i7-{vps_id}' > /etc/hostname
 
 # Install additional useful packages
 RUN apt-get update && \\
@@ -366,7 +366,7 @@ class Database:
         self.conn.close()
 
 # Initialize bot with command prefix '/'
-class UnixNodesBot(commands.Bot):
+class NxH(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.db = Database(DB_FILE)
@@ -967,7 +967,7 @@ async def create_vps_command(ctx, memory: int, cpu: int, disk: int, owner: disco
             await ctx.send(f"❌ {owner.mention} already has the maximum number of VPS instances ({bot.db.get_setting('max_vps_per_user')})", ephemeral=True)
             return
 
-        status_msg = await ctx.send("🚀 Creating UnixNodes VPS instance... This may take a few minutes.")
+        status_msg = await ctx.send("🚀 Creating NxH-i7 VPS instance... This may take a few minutes.")
 
         memory_bytes = memory * 1024 * 1024 * 1024
         vps_id = generate_vps_id()
@@ -1011,7 +1011,7 @@ async def create_vps_command(ctx, memory: int, cpu: int, disk: int, owner: disco
                     os_image,
                     detach=True,
                     privileged=True,
-                    hostname=f"unixnodes-{vps_id}",
+                    hostname=f"NxH-i7-{vps_id}",
                     mem_limit=memory_bytes,
                     cpu_period=100000,
                     cpu_quota=int(cpu * 100000),
@@ -1030,7 +1030,7 @@ async def create_vps_command(ctx, memory: int, cpu: int, disk: int, owner: disco
                     DEFAULT_OS_IMAGE,
                     detach=True,
                     privileged=True,
-                    hostname=f"unixnodes-{vps_id}",
+                    hostname=f"NxH-i7-{vps_id}",
                     mem_limit=memory_bytes,
                     cpu_period=100000,
                     cpu_quota=int(cpu * 100000),
@@ -1045,7 +1045,7 @@ async def create_vps_command(ctx, memory: int, cpu: int, disk: int, owner: disco
                 )
                 os_image = DEFAULT_OS_IMAGE
 
-        await status_msg.edit(content="🔧 Container created. Setting up UnixNodes environment...")
+        await status_msg.edit(content="🔧 Container created. Setting up NxH-i7 environment...")
         await asyncio.sleep(5)
 
         setup_success, ssh_password, _ = await setup_container(
@@ -1106,7 +1106,7 @@ async def create_vps_command(ctx, memory: int, cpu: int, disk: int, owner: disco
                 embed.add_field(name="🔑 Root Password", value=f"||{root_password}||", inline=False)
             embed.add_field(name="🔒 Tmate Session", value=f"```{ssh_session_line}```", inline=False)
             embed.add_field(name="🔌 Direct SSH", value=f"```ssh {username}@<server-ip>```", inline=False)
-            embed.add_field(name="ℹ️ Note", value="This is a UnixNodes VPS instance. You can install and configure additional packages as needed.", inline=False)
+            embed.add_field(name="ℹ️ Note", value="This is a NxH-i7 VPS instance. You can install and configure additional packages as needed.", inline=False)
             
             await owner.send(embed=embed)
             await status_msg.edit(content=f"✅ NxH-i7 VPS creation successful! VPS has been created for {owner.mention}. Check your DMs for connection details.")
@@ -1134,7 +1134,7 @@ async def list_vps(ctx):
             await ctx.send("You don't have any VPS instances.", ephemeral=True)
             return
 
-        embed = discord.Embed(title="Your UnixNodes VPS Instances", color=discord.Color.blue())
+        embed = discord.Embed(title="Your NxH-i7 VPS Instances", color=discord.Color.blue())
         
         for vps in user_vps:
             try:
@@ -1179,7 +1179,7 @@ async def admin_list_vps(ctx):
             await ctx.send("No VPS instances found.", ephemeral=True)
             return
 
-        embed = discord.Embed(title="All UnixNodes VPS Instances", color=discord.Color.blue())
+        embed = discord.Embed(title="All NxH-i7 VPS Instances", color=discord.Color.blue())
         valid_vps_count = 0
         
         for token, vps in all_vps.items():
@@ -1299,7 +1299,7 @@ async def connect_vps(ctx, token: str):
 
         bot.db.update_vps(token, {"tmate_session": ssh_session_line})
         
-        embed = discord.Embed(title="UnixNodes VPS Connection Details", color=discord.Color.blue())
+        embed = discord.Embed(title="NxH-i7 VPS Connection Details", color=discord.Color.blue())
         embed.add_field(name="Username", value=vps["username"], inline=True)
         embed.add_field(name="SSH Password", value=f"||{vps.get('password', 'Not set')}||", inline=True)
         embed.add_field(name="Tmate Session", value=f"```{ssh_session_line}```", inline=False)
@@ -1647,7 +1647,7 @@ async def vps_usage(ctx):
         total_disk = sum(vps['disk'] for vps in user_vps)
         total_restarts = sum(vps.get('restart_count', 0) for vps in user_vps)
         
-        embed = discord.Embed(title="Your UnixNodes VPS Usage", color=discord.Color.blue())
+        embed = discord.Embed(title="Your NxH-i7 VPS Usage", color=discord.Color.blue())
         embed.add_field(name="Total VPS Instances", value=len(user_vps), inline=True)
         embed.add_field(name="Total Memory Allocated", value=f"{total_memory}GB", inline=True)
         embed.add_field(name="Total CPU Cores Allocated", value=total_cpu, inline=True)
@@ -1952,7 +1952,7 @@ async def edit_vps(ctx, vps_id: str, memory: Optional[int] = None, cpu: Optional
                 vps['os_image'],
                 detach=True,
                 privileged=True,
-                hostname=f"unixnodes-{vps_id}",
+                hostname=f"NxH-i7-{vps_id}",
                 mem_limit=memory_bytes,
                 cpu_period=100000,
                 cpu_quota=cpu_quota,
@@ -2278,7 +2278,7 @@ class VPSManagementView(ui.View):
                 except:
                     pass
             
-            embed = discord.Embed(title=f"UnixNodes VPS Management - {self.vps_id}", color=discord.Color.green())
+            embed = discord.Embed(title=f"NxH-i7 VPS Management - {self.vps_id}", color=discord.Color.green())
             embed.add_field(name="Status", value="🟢 Running", inline=True)
             
             if vps:
@@ -2361,7 +2361,7 @@ class OSSelectionView(ui.View):
                     image,
                     detach=True,
                     privileged=True,
-                    hostname=f"unixnodes-{self.vps_id}",
+                    hostname=f"NxH-i7-{self.vps_id}",
                     mem_limit=memory_bytes,
                     cpu_period=100000,
                     cpu_quota=int(vps['cpu'] * 100000),
@@ -2655,4 +2655,5 @@ if __name__ == "__main__":
         logger.error(f"Bot crashed: {e}")
 
         traceback.print_exc()
+
 
