@@ -49,7 +49,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 ADMIN_IDS = {int(id_) for id_ in os.getenv('ADMIN_IDS', '1210291131301101618').split(',') if id_.strip()}
 ADMIN_ROLE_ID = int(os.getenv('ADMIN_ROLE_ID', '1376177459870961694'))
-WATERMARK = "UnixNodes VPS Service"
+WATERMARK = "NxH-i7 VPS Service"
 WELCOME_MESSAGE = "Welcome To NxH-i7! Get Started With Us!"
 MAX_VPS_PER_USER = int(os.getenv('MAX_VPS_PER_USER', '3'))
 DEFAULT_OS_IMAGE = os.getenv('DEFAULT_OS_IMAGE', 'ubuntu:22.04')
@@ -711,9 +711,9 @@ async def setup_container(container_id, status_msg, memory, username, vps_id=Non
 
         # Set UnixNodes customization
         if isinstance(status_msg, discord.Interaction):
-            await status_msg.followup.send("🎨 Setting up UnixNodes customization...", ephemeral=True)
+            await status_msg.followup.send("🎨 Setting up NxH-i7 customization...", ephemeral=True)
         else:
-            await status_msg.edit(content="🎨 Setting up UnixNodes customization...")
+            await status_msg.edit(content="🎨 Setting up NxH-i7 customization...")
             
         # Create welcome message file
         welcome_cmd = f"echo '{WELCOME_MESSAGE}' > /etc/motd && echo 'echo \"{WELCOME_MESSAGE}\"' >> /home/{username}/.bashrc"
@@ -724,7 +724,7 @@ async def setup_container(container_id, status_msg, memory, username, vps_id=Non
         # Set hostname and watermark
         if not vps_id:
             vps_id = generate_vps_id()
-        hostname_cmd = f"echo 'unixnodes-{vps_id}' > /etc/hostname && hostname unixnodes-{vps_id}"
+        hostname_cmd = f"echo 'NxH-i7-{vps_id}' > /etc/hostname && hostname unixnodes-{vps_id}"
         success, output = await run_docker_command(container_id, ["bash", "-c", hostname_cmd])
         if not success:
             raise Exception(f"Failed to set hostname: {output}")
@@ -761,9 +761,9 @@ async def setup_container(container_id, status_msg, memory, username, vps_id=Non
                 logger.warning(f"Security setup command failed: {cmd} - {output}")
 
         if isinstance(status_msg, discord.Interaction):
-            await status_msg.followup.send("✅ UnixNodes VPS setup completed successfully!", ephemeral=True)
+            await status_msg.followup.send("✅ NxH-i7 VPS setup completed successfully!", ephemeral=True)
         else:
-            await status_msg.edit(content="✅ UnixNodes VPS setup completed successfully!")
+            await status_msg.edit(content="✅ NxH-i7 VPS setup completed successfully!")
             
         return True, ssh_password, vps_id
     except Exception as e:
@@ -809,7 +809,7 @@ async def on_ready():
 async def show_commands(ctx):
     """Show all available commands"""
     try:
-        embed = discord.Embed(title="🤖 UnixNodes VPS Bot Commands", color=discord.Color.blue())
+        embed = discord.Embed(title="🤖 NxH-i7 VPS Bot Commands", color=discord.Color.blue())
         
         # User commands
         embed.add_field(name="User Commands", value="""
@@ -877,7 +877,7 @@ async def add_admin(ctx, user: discord.User):
 )
 async def remove_admin(ctx, user: discord.User):
     """Remove an admin user (Owner only)"""
-    if ctx.author.id != 1210291131301101618:  # Only the owner can remove admins
+    if ctx.author.id != 1094638459626459177:  # Only the owner can remove admins
         await ctx.send("❌ Only the owner can remove admins!", ephemeral=True)
         return
     
@@ -1039,7 +1039,7 @@ async def create_vps_command(ctx, memory: int, cpu: int, disk: int, owner: disco
                     tty=True,
                     network=DOCKER_NETWORK,
                     volumes={
-                        f'unixnodes-{vps_id}': {'bind': '/data', 'mode': 'rw'}
+                        f'NxH-i7-{vps_id}': {'bind': '/data', 'mode': 'rw'}
                     },
                     restart_policy={"Name": "always"}
                 )
@@ -1095,7 +1095,7 @@ async def create_vps_command(ctx, memory: int, cpu: int, disk: int, owner: disco
         bot.db.add_vps(vps_data)
         
         try:
-            embed = discord.Embed(title="🎉 UnixNodes VPS Creation Successful", color=discord.Color.green())
+            embed = discord.Embed(title="🎉 NxH-i7 VPS Creation Successful", color=discord.Color.green())
             embed.add_field(name="🆔 VPS ID", value=vps_id, inline=True)
             embed.add_field(name="💾 Memory", value=f"{memory}GB", inline=True)
             embed.add_field(name="⚡ CPU", value=f"{cpu} cores", inline=True)
@@ -1109,7 +1109,7 @@ async def create_vps_command(ctx, memory: int, cpu: int, disk: int, owner: disco
             embed.add_field(name="ℹ️ Note", value="This is a UnixNodes VPS instance. You can install and configure additional packages as needed.", inline=False)
             
             await owner.send(embed=embed)
-            await status_msg.edit(content=f"✅ UnixNodes VPS creation successful! VPS has been created for {owner.mention}. Check your DMs for connection details.")
+            await status_msg.edit(content=f"✅ NxH-i7 VPS creation successful! VPS has been created for {owner.mention}. Check your DMs for connection details.")
         except discord.Forbidden:
             await status_msg.edit(content=f"❌ I couldn't send a DM to {owner.mention}. Please ask them to enable DMs from server members.")
             
@@ -1444,7 +1444,7 @@ async def admin_stats(ctx):
         # Get system stats
         stats = bot.system_stats
         
-        embed = discord.Embed(title="UnixNodes System Statistics", color=discord.Color.blue())
+        embed = discord.Embed(title="NxH-i7 System Statistics", color=discord.Color.blue())
         embed.add_field(name="VPS Instances", value=f"Total: {len(bot.db.get_all_vps())}\nRunning: {len([c for c in containers if c.status == 'running'])}", inline=True)
         embed.add_field(name="Docker Containers", value=f"Total: {len(containers)}\nRunning: {len([c for c in containers if c.status == 'running'])}", inline=True)
         embed.add_field(name="CPU Usage", value=f"{stats['cpu_usage']}%", inline=True)
@@ -1961,7 +1961,7 @@ async def edit_vps(ctx, vps_id: str, memory: Optional[int] = None, cpu: Optional
                 tty=True,
                 network=DOCKER_NETWORK,
                 volumes={
-                    f'unixnodes-{vps_id}': {'bind': '/data', 'mode': 'rw'}
+                    f'NxH-i7-{vps_id}': {'bind': '/data', 'mode': 'rw'}
                 },
                 restart_policy={"Name": "always"}
             )
@@ -2073,12 +2073,12 @@ async def restore_data(ctx):
 @bot.hybrid_command(name='reinstall_bot', description='Reinstall the bot (Owner only)')
 async def reinstall_bot(ctx):
     """Reinstall the bot (Owner only)"""
-    if ctx.author.id != 1210291131301101618:  # Only the owner can reinstall
+    if ctx.author.id != 1094638459626459177:  # Only the owner can reinstall
         await ctx.send("❌ Only the owner can reinstall the bot!", ephemeral=True)
         return
 
     try:
-        await ctx.send("🔄 Reinstalling UnixNodes bot... This may take a few minutes.")
+        await ctx.send("🔄 Reinstalling NxH-i7 bot... This may take a few minutes.")
         
         # Create Dockerfile for bot reinstallation
         dockerfile_content = f"""
@@ -2138,7 +2138,7 @@ class VPSManagementView(ui.View):
         if token:
             bot.db.remove_vps(token)
         
-        embed = discord.Embed(title=f"UnixNodes VPS Management - {self.vps_id}", color=discord.Color.red())
+        embed = discord.Embed(title=f"NxH-i7 VPS Management - {self.vps_id}", color=discord.Color.red())
         embed.add_field(name="Status", value="🔴 Container Not Found", inline=True)
         embed.add_field(name="Note", value="This VPS instance is no longer available. Please create a new one.", inline=False)
         
@@ -2174,7 +2174,7 @@ class VPSManagementView(ui.View):
             if token:
                 bot.db.update_vps(token, {'status': 'running'})
             
-            embed = discord.Embed(title=f"UnixNodes VPS Management - {self.vps_id}", color=discord.Color.green())
+            embed = discord.Embed(title=f"NxH-i7 VPS Management - {self.vps_id}", color=discord.Color.green())
             embed.add_field(name="Status", value="🟢 Running", inline=True)
             
             if vps:
@@ -2185,7 +2185,7 @@ class VPSManagementView(ui.View):
                 embed.add_field(name="Created", value=vps['created_at'], inline=True)
             
             await interaction.message.edit(embed=embed)
-            await interaction.followup.send("✅ UnixNodes VPS started successfully!", ephemeral=True)
+            await interaction.followup.send("✅ NxH-i7 VPS started successfully!", ephemeral=True)
         except Exception as e:
             await interaction.followup.send(f"❌ Error starting VPS: {str(e)}", ephemeral=True)
 
@@ -2210,7 +2210,7 @@ class VPSManagementView(ui.View):
             if token:
                 bot.db.update_vps(token, {'status': 'stopped'})
             
-            embed = discord.Emembed(title=f"UnixNodes VPS Management - {self.vps_id}", color=discord.Color.orange())
+            embed = discord.Emembed(title=f"NxH-i7 VPS Management - {self.vps_id}", color=discord.Color.orange())
             embed.add_field(name="Status", value="🔴 Stopped", inline=True)
             
             if vps:
@@ -2221,7 +2221,7 @@ class VPSManagementView(ui.View):
                 embed.add_field(name="Created", value=vps['created_at'], inline=True)
             
             await interaction.message.edit(embed=embed)
-            await interaction.followup.send("✅ UnixNodes VPS stopped successfully!", ephemeral=True)
+            await interaction.followup.send("✅ NxH-i7 VPS stopped successfully!", ephemeral=True)
         except Exception as e:
             await interaction.followup.send(f"❌ Error stopping VPS: {str(e)}", ephemeral=True)
 
@@ -2290,7 +2290,7 @@ class VPSManagementView(ui.View):
                 embed.add_field(name="Restart Count", value=vps.get('restart_count', 0) + 1, inline=True)
             
             await interaction.message.edit(embed=embed, view=VPSManagementView(self.vps_id, container.id))
-            await interaction.followup.send("✅ UnixNodes VPS restarted successfully! New SSH details sent to owner.", ephemeral=True)
+            await interaction.followup.send("✅ NxH-i7 VPS restarted successfully! New SSH details sent to owner.", ephemeral=True)
         except Exception as e:
             await interaction.followup.send(f"❌ Error restarting VPS: {str(e)}", ephemeral=True)
 
@@ -2438,10 +2438,10 @@ class OSSelectionView(ui.View):
             except Exception as e:
                 logger.error(f"Warning: Failed to start tmate session: {e}")
 
-            await status_msg.edit(content="✅ UnixNodes VPS reinstalled successfully!")
+            await status_msg.edit(content="✅ NxH-i7 VPS reinstalled successfully!")
             
             try:
-                embed = discord.Embed(title=f"UnixNodes VPS Management - {self.vps_id}", color=discord.Color.green())
+                embed = discord.Embed(title=f"NxH-i7 VPS Management - {self.vps_id}", color=discord.Color.green())
                 embed.add_field(name="Status", value="🟢 Running", inline=True)
                 embed.add_field(name="Memory", value=f"{vps['memory']}GB", inline=True)
                 embed.add_field(name="CPU", value=f"{vps['cpu']} cores", inline=True)
@@ -2529,10 +2529,10 @@ class TransferVPSModal(ui.Modal, title='Transfer VPS'):
 
             bot.db.update_vps(token, {"created_by": str(new_owner.id)})
 
-            await interaction.response.send_message(f"✅ UnixNodes VPS {self.vps_id} has been transferred from {old_owner_name} to {new_owner_name}!", ephemeral=True)
+            await interaction.response.send_message(f"✅ NxH-i7 VPS {self.vps_id} has been transferred from {old_owner_name} to {new_owner_name}!", ephemeral=True)
             
             try:
-                embed = discord.Embed(title="UnixNodes VPS Transferred to You", color=discord.Color.green())
+                embed = discord.Embed(title="NxH-i7 VPS Transferred to You", color=discord.Color.green())
                 embed.add_field(name="VPS ID", value=self.vps_id, inline=True)
                 embed.add_field(name="Previous Owner", value=old_owner_name, inline=True)
                 embed.add_field(name="Memory", value=f"{vps['memory']}GB", inline=True)
@@ -2569,7 +2569,7 @@ async def manage_vps(ctx, vps_id: str):
 
         status = vps['status'].capitalize()
 
-        embed = discord.Embed(title=f"UnixNodes VPS Management - {vps_id}", color=discord.Color.blue())
+        embed = discord.Embed(title=f"NxH-i7 VPS Management - {vps_id}", color=discord.Color.blue())
         embed.add_field(name="Status", value=f"{status} (Container: {container_status})", inline=True)
         embed.add_field(name="Memory", value=f"{vps['memory']}GB", inline=True)
         embed.add_field(name="CPU", value=f"{vps['cpu']} cores", inline=True)
@@ -2611,10 +2611,10 @@ async def transfer_vps_command(ctx, vps_id: str, new_owner: discord.Member):
 
         bot.db.update_vps(token, {"created_by": str(new_owner.id)})
 
-        await ctx.send(f"✅ UnixNodes VPS {vps_id} has been transferred from {ctx.author.name} to {new_owner.name}!")
+        await ctx.send(f"✅ NxH-i7 VPS {vps_id} has been transferred from {ctx.author.name} to {new_owner.name}!")
 
         try:
-            embed = discord.Embed(title="UnixNodes VPS Transferred to You", color=discord.Color.green())
+            embed = discord.Embed(title="NxH-i7 VPS Transferred to You", color=discord.Color.green())
             embed.add_field(name="VPS ID", value=vps_id, inline=True)
             embed.add_field(name="Previous Owner", value=ctx.author.name, inline=True)
             embed.add_field(name="Memory", value=f"{vps['memory']}GB", inline=True)
@@ -2655,3 +2655,4 @@ if __name__ == "__main__":
         logger.error(f"Bot crashed: {e}")
 
         traceback.print_exc()
+
